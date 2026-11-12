@@ -1,0 +1,1567 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyBuddy AI — Study Plan, Checklist & Quiz</title>
+    <!-- Tailwind CSS for clean, responsive mobile-first styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: #F4F7FB;
+            background-image:
+                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.09) 0px, transparent 48%),
+                radial-gradient(at 100% 0%, rgba(139, 92, 246, 0.08) 0px, transparent 45%);
+            -webkit-tap-highlight-color: transparent;
+        }
+        h1, h2, h3, .font-display {
+            font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+        }
+        /* Subtle custom scrollbar for horizontal tables on mobile */
+        ::-webkit-scrollbar {
+            height: 6px;
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #CBD5E1;
+            border-radius: 9999px;
+        }
+    </style>
+</head>
+<body class="text-slate-800 min-h-screen antialiased selection:bg-indigo-100 selection:text-indigo-900">
+
+    <!-- Top Glassmorphic Header -->
+    <header class="bg-white/85 backdrop-blur-md border-b border-slate-200/80 sticky top-0 z-20">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-600 via-violet-600 to-purple-600 text-white flex items-center justify-center font-display font-extrabold text-sm tracking-tight shadow-md shadow-indigo-500/20 shrink-0">
+                    SB
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h1 class="text-lg sm:text-xl font-bold text-slate-900 leading-tight tracking-tight">StudyBuddy AI</h1>
+                        <span class="hidden sm:inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200/70">
+                            Smart Planner
+                        </span>
+                    </div>
+                    <p class="text-xs text-slate-500 hidden sm:block">Balanced exam schedules, live progress tracking & quick self-quizzes</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <button type="button" id="resetBtn"
+                    class="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs sm:text-sm font-medium text-slate-600 hover:text-rose-600 bg-slate-100/90 hover:bg-rose-50 border border-slate-200/80 hover:border-rose-200 rounded-xl transition cursor-pointer">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                    </svg>
+                    <span>Reset</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Quick-Jump Navigation Strip -->
+        <nav aria-label="Section navigation" class="lg:hidden border-t border-slate-100 bg-white/95 px-4 py-2 overflow-x-auto">
+            <div class="flex items-center gap-2 min-w-max text-xs font-medium">
+                <a href="#section-details" class="px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition">1. Setup</a>
+                <a href="#section-plan" class="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200/70 transition">2. Study Plan</a>
+                <a href="#section-checklist" class="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200/70 transition">3. Checklist</a>
+                <a href="#section-quiz" class="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200/70 transition">4. Practice Quiz</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Responsive Container -->
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
+
+        <!-- Overview KPI Summary Strip -->
+        <section aria-label="Study overview" class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+            <div class="bg-white rounded-2xl border border-slate-200/80 shadow-[0_2px_10px_-3px_rgba(15,23,42,0.05)] p-4 flex items-center gap-3.5">
+                <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 border border-indigo-100 flex items-center justify-center shrink-0">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                </div>
+                <div class="min-w-0">
+                    <p class="text-[11px] font-medium uppercase tracking-wider text-slate-400">Study Span</p>
+                    <p id="kpiDays" class="text-base sm:text-lg font-bold text-slate-900 truncate">0 Days</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl border border-slate-200/80 shadow-[0_2px_10px_-3px_rgba(15,23,42,0.05)] p-4 flex items-center gap-3.5">
+                <div class="w-10 h-10 rounded-xl bg-sky-50 text-sky-600 border border-sky-100 flex items-center justify-center shrink-0">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                </div>
+                <div class="min-w-0">
+                    <p class="text-[11px] font-medium uppercase tracking-wider text-slate-400">Planned Time</p>
+                    <p id="kpiHours" class="text-base sm:text-lg font-bold text-slate-900 truncate">0 Hrs</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl border border-slate-200/80 shadow-[0_2px_10px_-3px_rgba(15,23,42,0.05)] p-4 flex items-center gap-3.5">
+                <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center shrink-0">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                </div>
+                <div class="min-w-0">
+                    <p class="text-[11px] font-medium uppercase tracking-wider text-slate-400">Completion</p>
+                    <p id="kpiProgress" class="text-base sm:text-lg font-bold text-emerald-700 truncate">0%</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl border border-slate-200/80 shadow-[0_2px_10px_-3px_rgba(15,23,42,0.05)] p-4 flex items-center gap-3.5">
+                <div class="w-10 h-10 rounded-xl bg-violet-50 text-violet-600 border border-violet-100 flex items-center justify-center shrink-0">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                    </svg>
+                </div>
+                <div class="min-w-0">
+                    <p class="text-[11px] font-medium uppercase tracking-wider text-slate-400">Quiz Score</p>
+                    <p id="kpiQuiz" class="text-base sm:text-lg font-bold text-violet-700 truncate">Not taken</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Two-Column Workspace Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+            <!-- LEFT COLUMN: Sticky Study Input Form -->
+            <section id="section-details" class="scroll-mt-24 lg:col-span-4 lg:sticky lg:top-20 bg-white rounded-2xl border border-slate-200/90 shadow-[0_2px_12px_-3px_rgba(15,23,42,0.06)] p-5 space-y-5">
+                <div class="flex items-start gap-3">
+                    <span class="w-7 h-7 rounded-lg bg-indigo-50 text-indigo-600 border border-indigo-100 text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">
+                        01
+                    </span>
+                    <div>
+                        <h2 class="text-base font-bold text-slate-900">Study Details</h2>
+                        <p class="text-xs text-slate-500 mt-0.5">Set daily study capacity and add exam subjects.</p>
+                    </div>
+                </div>
+
+                <!-- Daily Free Hours Box -->
+                <div class="p-3.5 rounded-xl bg-gradient-to-br from-indigo-50/70 to-violet-50/50 border border-indigo-100/90">
+                    <div class="flex items-center justify-between mb-1.5">
+                        <label for="dailyHours" class="text-xs font-semibold text-slate-700">
+                            Daily Free Study Hours
+                        </label>
+                        <span id="dailyHoursBadge" class="text-[11px] font-bold text-indigo-700 bg-white px-2 py-0.5 rounded-md border border-indigo-200/80 shadow-2xs">
+                            4 hrs/day
+                        </span>
+                    </div>
+                    <input type="number" id="dailyHours" min="0.5" max="16" step="0.5" value="4"
+                        class="w-full px-3.5 py-2.5 text-sm font-medium bg-white border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
+                    <p class="text-[11px] text-slate-500 mt-1.5">Allowed range: 0.5 – 16 hours per day</p>
+                    <p id="hoursError" class="hidden text-xs font-medium text-rose-600 mt-1.5"></p>
+                </div>
+
+                <hr class="border-slate-100">
+
+                <!-- Add Subject Form -->
+                <form id="subjectForm" class="space-y-3.5" novalidate>
+                    <div>
+                        <label for="subjectName" class="block text-xs font-semibold text-slate-700 mb-1">
+                            Subject Name <span class="text-rose-500">*</span>
+                        </label>
+                        <input type="text" id="subjectName" placeholder="e.g., Mathematics" required
+                            class="w-full px-3.5 py-2.5 text-sm bg-slate-50/60 focus:bg-white border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
+                    </div>
+
+                    <div>
+                        <label for="examDate" class="block text-xs font-semibold text-slate-700 mb-1">
+                            Exam Date <span class="text-rose-500">*</span>
+                        </label>
+                        <input type="date" id="examDate" required
+                            class="w-full px-3.5 py-2.5 text-sm bg-slate-50/60 focus:bg-white border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
+                    </div>
+
+                    <div>
+                        <label for="subjectTopics" class="block text-xs font-semibold text-slate-700 mb-1">
+                            Topics <span class="text-slate-400 font-normal">(comma-separated, optional)</span>
+                        </label>
+                        <input type="text" id="subjectTopics" placeholder="e.g., Algebra, Calculus, Trigonometry"
+                            class="w-full px-3.5 py-2.5 text-sm bg-slate-50/60 focus:bg-white border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
+                    </div>
+
+                    <!-- Inline Status / Validation Message -->
+                    <p id="formMessage" class="hidden text-xs font-medium px-3 py-2 rounded-xl"></p>
+
+                    <button type="submit"
+                        class="w-full py-2.5 px-4 bg-slate-900 hover:bg-slate-800 text-white text-sm font-semibold rounded-xl shadow-xs transition cursor-pointer flex items-center justify-center gap-1.5">
+                        <span>+ Add Subject</span>
+                    </button>
+                </form>
+
+                <!-- Added Subjects List -->
+                <div class="pt-1">
+                    <div class="flex items-center justify-between mb-2.5">
+                        <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Added Subjects</span>
+                        <span id="subjectCount" class="text-xs font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-full">0</span>
+                    </div>
+                    <div id="subjectsList" class="space-y-2">
+                        <!-- Subject items rendered via JS -->
+                    </div>
+                </div>
+
+                <!-- Generate Plan Action Button -->
+                <button type="button" id="generateBtn"
+                    class="w-full py-3 px-4 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white text-sm font-semibold rounded-xl shadow-md shadow-indigo-500/20 transition cursor-pointer">
+                    Generate Study Plan
+                </button>
+            </section>
+
+            <!-- RIGHT COLUMN: Day-Wise Plan Table, Progress Checklist & Practice Quiz -->
+            <div class="lg:col-span-8 space-y-6">
+
+                <!-- 2. Day-Wise Study Plan Table Card -->
+                <section id="section-plan" class="scroll-mt-24 bg-white rounded-2xl border border-slate-200/90 shadow-[0_2px_12px_-3px_rgba(15,23,42,0.06)] overflow-hidden">
+                    <div class="p-5 border-b border-slate-100 bg-gradient-to-r from-white via-white to-sky-50/50 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div class="flex items-start gap-3">
+                            <span class="w-7 h-7 rounded-lg bg-sky-50 text-sky-600 border border-sky-100 text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">
+                                02
+                            </span>
+                            <div>
+                                <h2 class="text-base font-bold text-slate-900">Day-Wise Study Plan</h2>
+                                <p class="text-xs text-slate-500 mt-0.5">Weighted automatically by exam proximity and daily free hours.</p>
+                            </div>
+                        </div>
+                        <span id="planSummaryBadge" class="text-xs font-semibold px-3 py-1.5 rounded-xl bg-sky-50 text-sky-700 border border-sky-200/70 self-start sm:self-auto">
+                            0 days • 0 hrs
+                        </span>
+                    </div>
+
+                    <!-- Responsive Table -->
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-slate-200/80 text-left text-sm">
+                            <thead class="bg-slate-50/90 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                                <tr>
+                                    <th class="py-3 pl-5 pr-3 whitespace-nowrap">Day & Date</th>
+                                    <th class="px-3 py-3">Subject</th>
+                                    <th class="px-3 py-3">Focus Topic</th>
+                                    <th class="px-3 py-3 whitespace-nowrap">Duration</th>
+                                    <th class="py-3 pl-3 pr-5 text-right whitespace-nowrap">Done</th>
+                                </tr>
+                            </thead>
+                            <tbody id="planTableBody" class="divide-y divide-slate-100 bg-white">
+                                <!-- Schedule rows rendered via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Empty Table Placeholder -->
+                    <div id="emptyTableState" class="hidden py-12 px-4 text-center bg-slate-50/40">
+                        <p class="text-sm font-semibold text-slate-700">No study plan yet</p>
+                        <p class="text-xs text-slate-500 mt-1">Add your subjects and exam dates on the left to build your schedule.</p>
+                    </div>
+                </section>
+
+                <!-- 3. Progress Checklist Card -->
+                <section id="section-checklist" class="scroll-mt-24 bg-white rounded-2xl border border-slate-200/90 shadow-[0_2px_12px_-3px_rgba(15,23,42,0.06)] p-5">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+                        <div class="flex items-start gap-3">
+                            <span class="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-600 border border-emerald-100 text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">
+                                03
+                            </span>
+                            <div>
+                                <h2 class="text-base font-bold text-slate-900">Progress Checklist</h2>
+                                <p class="text-xs text-slate-500 mt-0.5">Mark topics complete to update your study hours and readiness.</p>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <span id="hoursProgressText" class="text-xs font-semibold text-slate-700 bg-slate-100 border border-slate-200/70 px-2.5 py-1.5 rounded-xl">
+                                0 / 0 hrs
+                            </span>
+                            <span id="progressText" class="text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200/70 px-3 py-1.5 rounded-xl">
+                                0 / 0 completed (0%)
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Smooth Gradient Progress Bar -->
+                    <div class="w-full bg-slate-100 rounded-full h-3 mb-4 p-0.5 overflow-hidden border border-slate-200/60">
+                        <div id="progressBar" class="bg-gradient-to-r from-emerald-500 via-teal-500 to-indigo-500 h-full rounded-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
+
+                    <!-- Checklist Filter & Quick Actions Toolbar -->
+                    <div class="flex flex-wrap items-center justify-between gap-2 mb-4 pb-3.5 border-b border-slate-100">
+                        <div id="checklistFilters" class="inline-flex rounded-xl bg-slate-100/90 p-1 text-xs font-semibold border border-slate-200/60">
+                            <button type="button" data-filter="all"
+                                class="px-3 py-1.5 rounded-lg bg-white text-slate-900 shadow-xs transition cursor-pointer">
+                                All <span id="countAll" class="text-slate-400 font-normal ml-0.5">(0)</span>
+                            </button>
+                            <button type="button" data-filter="pending"
+                                class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition cursor-pointer">
+                                Remaining <span id="countPending" class="text-slate-400 font-normal ml-0.5">(0)</span>
+                            </button>
+                            <button type="button" data-filter="done"
+                                class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition cursor-pointer">
+                                Completed <span id="countDone" class="text-slate-400 font-normal ml-0.5">(0)</span>
+                            </button>
+                        </div>
+
+                        <button type="button" id="toggleAllDoneBtn"
+                            class="px-3.5 py-1.5 text-xs font-semibold text-indigo-700 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200/70 rounded-xl transition cursor-pointer">
+                            Mark All Done
+                        </button>
+                    </div>
+
+                    <!-- 100% Completion Banner -->
+                    <div id="completionBanner" class="hidden mb-4 px-4 py-3 rounded-xl bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 text-emerald-900 text-xs font-medium flex items-center justify-between">
+                        <span class="font-semibold">All study topics completed! You are ready for exam day.</span>
+                        <span class="px-2 py-0.5 rounded-full bg-emerald-600 text-white font-bold text-[11px]">100%</span>
+                    </div>
+
+                    <!-- Checklist Items -->
+                    <div id="checklistContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <!-- Checklist rendered via JS -->
+                    </div>
+                </section>
+
+                <!-- 4. Quick Practice Quiz Card -->
+                <section id="section-quiz" class="scroll-mt-24 bg-white rounded-2xl border border-slate-200/90 shadow-[0_2px_12px_-3px_rgba(15,23,42,0.06)] p-5">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 pb-4 border-b border-slate-100">
+                        <div class="flex items-start gap-3">
+                            <span class="w-7 h-7 rounded-lg bg-violet-50 text-violet-600 border border-violet-100 text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">
+                                04
+                            </span>
+                            <div>
+                                <h2 class="text-base font-bold text-slate-900">Quick Practice Quiz</h2>
+                                <p class="text-xs text-slate-500 mt-0.5">Test your knowledge on your study subjects and check your score.</p>
+                            </div>
+                        </div>
+
+                        <!-- Subject Filter & New Quiz Button -->
+                        <div class="flex flex-wrap items-center gap-2">
+                            <select id="quizSubjectSelect" aria-label="Select quiz subject"
+                                class="px-3 py-2 text-xs font-semibold border border-slate-300 rounded-xl bg-slate-50/70 hover:bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-violet-500 transition">
+                                <option value="all">All Subjects</option>
+                            </select>
+                            <button type="button" id="newQuizBtn"
+                                class="px-3.5 py-2 text-xs font-semibold text-violet-700 bg-violet-50 hover:bg-violet-100 border border-violet-200/80 rounded-xl transition cursor-pointer">
+                                New Quiz
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Score Summary Banner (Visible after checking answers) -->
+                    <div id="quizScoreBanner" class="hidden mb-5 p-4 rounded-2xl border flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div class="flex items-center gap-3.5">
+                            <div id="quizScoreCircle" class="w-12 h-12 rounded-2xl flex items-center justify-center font-display font-bold text-base shrink-0 shadow-xs">
+                                0/5
+                            </div>
+                            <div>
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <h3 id="quizScoreTitle" class="text-sm font-bold text-slate-900">Quiz Score: 0%</h3>
+                                    <span id="quizScoreBadge" class="px-2.5 py-0.5 text-[11px] font-semibold rounded-full"></span>
+                                </div>
+                                <p id="quizScoreSubtitle" class="text-xs text-slate-600 mt-0.5">Review the highlighted answers and explanations below.</p>
+                            </div>
+                        </div>
+                        <button type="button" id="retryQuizBtn"
+                            class="px-3.5 py-2 text-xs font-semibold bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 rounded-xl shadow-2xs transition cursor-pointer self-start sm:self-auto">
+                            Retry Quiz
+                        </button>
+                    </div>
+
+                    <!-- Validation / Warning Message for Quiz -->
+                    <p id="quizWarning" class="hidden mb-4 text-xs font-medium px-3.5 py-2.5 rounded-xl bg-amber-50 text-amber-800 border border-amber-200"></p>
+
+                    <!-- Quiz Questions Container -->
+                    <div id="quizQuestionsContainer" class="space-y-4">
+                        <!-- Questions rendered via JS -->
+                    </div>
+
+                    <!-- Quiz Action Footer -->
+                    <div id="quizFooter" class="mt-5 pt-4 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <span id="quizAnsweredCount" class="text-xs font-medium text-slate-500">0 of 0 answered</span>
+                        <button type="button" id="checkAnswersBtn"
+                            class="w-full sm:w-auto px-5 py-2.5 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white text-sm font-semibold rounded-xl shadow-md shadow-violet-500/20 transition cursor-pointer">
+                            Check Answers & Score
+                        </button>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+    </main>
+
+    <script>
+        /**
+         * StudyBuddy AI — Single-File Application Logic
+         * Includes:
+         * 1. Validated Study Details Form
+         * 2. Day-Wise Study Plan Table
+         * 3. Synced Progress Checklist with localStorage persistence
+         * 4. Interactive Practice Quiz with Answer Checking & Score Summary
+         */
+        (function () {
+            'use strict';
+
+            const STORAGE_KEY = 'studybuddy_simple_v2';
+
+            const BADGE_COLORS = [
+                'bg-indigo-50 text-indigo-700 border-indigo-200/90',
+                'bg-emerald-50 text-emerald-700 border-emerald-200/90',
+                'bg-amber-50 text-amber-700 border-amber-200/90',
+                'bg-sky-50 text-sky-700 border-sky-200/90',
+                'bg-purple-50 text-purple-700 border-purple-200/90'
+            ];
+
+            const DOT_COLORS = [
+                'bg-indigo-500',
+                'bg-emerald-500',
+                'bg-amber-500',
+                'bg-sky-500',
+                'bg-purple-500'
+            ];
+
+            const DEFAULT_TOPICS = [
+                'Core Concepts & Notes',
+                'Key Formulas & Theory',
+                'Practice Questions',
+                'Past Paper Revision'
+            ];
+
+            // Curated Question Bank by Subject Keyword
+            const QUESTION_BANK = {
+                math: [
+                    {
+                        topic: 'Calculus',
+                        question: 'What is the derivative of f(x) = 3x² + 5x − 7 with respect to x?',
+                        options: ['6x + 5', '3x + 5', '6x² + 5', 'x³ + 5x'],
+                        correctIndex: 0,
+                        explanation: 'Using the power rule d/dx(xⁿ) = n·xⁿ⁻¹, d/dx(3x²) = 6x, d/dx(5x) = 5, and the derivative of a constant (−7) is 0.'
+                    },
+                    {
+                        topic: 'Algebra',
+                        question: 'If 2x − 7 = 15, what is the value of x?',
+                        options: ['4', '8', '11', '22'],
+                        correctIndex: 2,
+                        explanation: 'Add 7 to both sides to get 2x = 22, then divide both sides by 2 to obtain x = 11.'
+                    },
+                    {
+                        topic: 'Trigonometry',
+                        question: 'Which trigonometric identity is always true for any angle θ?',
+                        options: ['sin²θ − cos²θ = 1', 'sin²θ + cos²θ = 1', 'tan θ = cos θ / sin θ', 'sin(2θ) = sin θ + cos θ'],
+                        correctIndex: 1,
+                        explanation: 'By the Pythagorean identity on the unit circle, sin²θ + cos²θ = 1 holds for all real angles θ.'
+                    },
+                    {
+                        topic: 'Probability & Statistics',
+                        question: 'What is the median of the dataset: [12, 4, 9, 21, 7]?',
+                        options: ['7', '9', '10.6', '12'],
+                        correctIndex: 1,
+                        explanation: 'Sort the values in ascending order: [4, 7, 9, 12, 21]. The middle value (3rd of 5) is 9.'
+                    },
+                    {
+                        topic: 'Integration',
+                        question: 'What is the indefinite integral ∫ 4x³ dx?',
+                        options: ['12x² + C', 'x⁴ + C', '4x⁴ + C', 'x³ + C'],
+                        correctIndex: 1,
+                        explanation: 'Applying the reverse power rule ∫ xⁿ dx = xⁿ⁺¹/(n+1), ∫ 4x³ dx = 4·(x⁴/4) + C = x⁴ + C.'
+                    }
+                ],
+                computer: [
+                    {
+                        topic: 'Algorithms & Complexity',
+                        question: 'What is the worst-case time complexity of Binary Search on a sorted array of n elements?',
+                        options: ['O(1)', 'O(log n)', 'O(n)', 'O(n log n)'],
+                        correctIndex: 1,
+                        explanation: 'Binary search halves the remaining search space on every step, resulting in O(log n) comparisons.'
+                    },
+                    {
+                        topic: 'Data Structures',
+                        question: 'Which data structure follows the Last-In, First-Out (LIFO) principle?',
+                        options: ['Queue', 'Stack', 'Hash Table', 'Binary Search Tree'],
+                        correctIndex: 1,
+                        explanation: 'A Stack pushes and pops elements from the same top end, following Last-In, First-Out (LIFO) order.'
+                    },
+                    {
+                        topic: 'Sorting Algorithms',
+                        question: 'Which sorting algorithm guarantees O(n log n) worst-case time complexity?',
+                        options: ['Bubble Sort', 'Insertion Sort', 'Merge Sort', 'Selection Sort'],
+                        correctIndex: 2,
+                        explanation: 'Merge Sort recursively divides the array in half and merges sorted subarrays in O(n log n) time even in the worst case.'
+                    },
+                    {
+                        topic: 'Trees & Graphs',
+                        question: 'Which traversal visits a Binary Search Tree (BST) in ascending sorted order?',
+                        options: ['Pre-order traversal', 'In-order traversal', 'Post-order traversal', 'Level-order traversal'],
+                        correctIndex: 1,
+                        explanation: 'In-order traversal visits Left subtree → Root → Right subtree, yielding sorted keys in a valid BST.'
+                    },
+                    {
+                        topic: 'Recursion',
+                        question: 'What is essential in every recursive function to prevent infinite recursion?',
+                        options: ['A global counter variable', 'A base case condition', 'A while loop', 'Dynamic memory allocation'],
+                        correctIndex: 1,
+                        explanation: 'A base case defines when the function stops calling itself and begins returning values back up the call stack.'
+                    }
+                ],
+                physics: [
+                    {
+                        topic: 'Mechanics',
+                        question: 'According to Newton’s Second Law, what net force is needed to accelerate a 5 kg mass at 3 m/s²?',
+                        options: ['1.67 N', '8 N', '15 N', '45 N'],
+                        correctIndex: 2,
+                        explanation: 'Using F = m · a, F = 5 kg × 3 m/s² = 15 N.'
+                    },
+                    {
+                        topic: 'Energy & Work',
+                        question: 'What happens to the kinetic energy of a moving object if its speed is doubled?',
+                        options: ['It stays the same', 'It doubles', 'It triples', 'It quadruples'],
+                        correctIndex: 3,
+                        explanation: 'Since KE = ½mv², doubling velocity v increases v² by a factor of 2² = 4.'
+                    },
+                    {
+                        topic: 'Electricity',
+                        question: 'Using Ohm’s Law (V = IR), what is the current through a 10 Ω resistor connected to a 20 V source?',
+                        options: ['0.5 A', '2 A', '10 A', '200 A'],
+                        correctIndex: 1,
+                        explanation: 'Rearranging V = IR gives I = V / R = 20 V / 10 Ω = 2 A.'
+                    }
+                ],
+                chemistry: [
+                    {
+                        topic: 'Atomic Structure',
+                        question: 'Which subatomic particle determines the atomic number and identity of an element?',
+                        options: ['Neutron', 'Proton', 'Electron', 'Positron'],
+                        correctIndex: 1,
+                        explanation: 'The number of protons in the nucleus defines the atomic number (Z) and uniquely identifies each element.'
+                    },
+                    {
+                        topic: 'Chemical Bonding',
+                        question: 'Which type of bond involves the sharing of electron pairs between nonmetal atoms?',
+                        options: ['Ionic bond', 'Covalent bond', 'Metallic bond', 'Hydrogen bond'],
+                        correctIndex: 1,
+                        explanation: 'Covalent bonds form when nonmetal atoms share valence electrons to achieve stable electron configurations.'
+                    },
+                    {
+                        topic: 'Acids & Bases',
+                        question: 'A solution with a pH of 3 is how many times more acidic than a solution with a pH of 5?',
+                        options: ['2 times', '10 times', '20 times', '100 times'],
+                        correctIndex: 3,
+                        explanation: 'The pH scale is logarithmic (base 10), so a difference of 2 pH units equals 10² = 100 times greater [H⁺] concentration.'
+                    }
+                ],
+                biology: [
+                    {
+                        topic: 'Cell Biology',
+                        question: 'Which organelle is primarily responsible for producing ATP via cellular respiration in eukaryotic cells?',
+                        options: ['Ribosome', 'Golgi apparatus', 'Mitochondrion', 'Lysosome'],
+                        correctIndex: 2,
+                        explanation: 'Mitochondria carry out oxidative phosphorylation to generate the majority of cellular ATP.'
+                    },
+                    {
+                        topic: 'Genetics',
+                        question: 'During DNA replication, which nitrogenous base pairs with Adenine (A)?',
+                        options: ['Cytosine (C)', 'Guanine (G)', 'Thymine (T)', 'Uracil (U)'],
+                        correctIndex: 2,
+                        explanation: 'In double-stranded DNA, Adenine forms two hydrogen bonds specifically with Thymine.'
+                    }
+                ],
+                general: [
+                    {
+                        topic: 'Active Recall Strategy',
+                        question: 'Which study technique has the highest long-term retention for upcoming exams?',
+                        options: ['Re-reading highlighted notes passively', 'Active recall self-testing & spaced repetition', 'Cramming all chapters the night before', 'Copying textbook pages word-for-word'],
+                        correctIndex: 1,
+                        explanation: 'Retrieving information from memory (active recall) combined with spaced intervals strengthens neural recall pathways.'
+                    },
+                    {
+                        topic: 'Exam Time Management',
+                        question: 'When multiple exams are approaching on different dates, how should daily study hours be prioritized?',
+                        options: ['Spend equal time only on the easiest subject', 'Weight more daily hours toward the nearest exam date', 'Skip subjects until the day before their exam', 'Study only one subject per week'],
+                        correctIndex: 1,
+                        explanation: 'Allocating higher weight to closer exam dates ensures timely syllabus completion while maintaining steady progress on later exams.'
+                    }
+                ]
+            };
+
+            // App State
+            let state = {
+                dailyHours: 4,
+                subjects: [],
+                plan: [],
+                checklistFilter: 'all',
+                quiz: {
+                    selectedSubjectId: 'all',
+                    questions: [], // { id, subjectName, colorIndex, topic, question, options, correctIndex, explanation }
+                    userAnswers: {}, // { [questionId]: selectedOptionIndex }
+                    submitted: false
+                }
+            };
+
+            // Cached DOM Elements
+            const dom = {
+                kpiDays: document.getElementById('kpiDays'),
+                kpiHours: document.getElementById('kpiHours'),
+                kpiProgress: document.getElementById('kpiProgress'),
+                kpiQuiz: document.getElementById('kpiQuiz'),
+                dailyHoursBadge: document.getElementById('dailyHoursBadge'),
+                dailyHours: document.getElementById('dailyHours'),
+                hoursError: document.getElementById('hoursError'),
+                subjectForm: document.getElementById('subjectForm'),
+                subjectName: document.getElementById('subjectName'),
+                examDate: document.getElementById('examDate'),
+                subjectTopics: document.getElementById('subjectTopics'),
+                formMessage: document.getElementById('formMessage'),
+                subjectsList: document.getElementById('subjectsList'),
+                subjectCount: document.getElementById('subjectCount'),
+                generateBtn: document.getElementById('generateBtn'),
+                resetBtn: document.getElementById('resetBtn'),
+                planSummaryBadge: document.getElementById('planSummaryBadge'),
+                planTableBody: document.getElementById('planTableBody'),
+                emptyTableState: document.getElementById('emptyTableState'),
+                hoursProgressText: document.getElementById('hoursProgressText'),
+                progressText: document.getElementById('progressText'),
+                progressBar: document.getElementById('progressBar'),
+                checklistFilters: document.getElementById('checklistFilters'),
+                countAll: document.getElementById('countAll'),
+                countPending: document.getElementById('countPending'),
+                countDone: document.getElementById('countDone'),
+                toggleAllDoneBtn: document.getElementById('toggleAllDoneBtn'),
+                completionBanner: document.getElementById('completionBanner'),
+                checklistContainer: document.getElementById('checklistContainer'),
+                quizSubjectSelect: document.getElementById('quizSubjectSelect'),
+                newQuizBtn: document.getElementById('newQuizBtn'),
+                quizScoreBanner: document.getElementById('quizScoreBanner'),
+                quizScoreCircle: document.getElementById('quizScoreCircle'),
+                quizScoreTitle: document.getElementById('quizScoreTitle'),
+                quizScoreBadge: document.getElementById('quizScoreBadge'),
+                quizScoreSubtitle: document.getElementById('quizScoreSubtitle'),
+                retryQuizBtn: document.getElementById('retryQuizBtn'),
+                quizWarning: document.getElementById('quizWarning'),
+                quizQuestionsContainer: document.getElementById('quizQuestionsContainer'),
+                quizFooter: document.getElementById('quizFooter'),
+                quizAnsweredCount: document.getElementById('quizAnsweredCount'),
+                checkAnswersBtn: document.getElementById('checkAnswersBtn')
+            };
+
+            function getLocalISO(offsetDays = 0) {
+                const d = new Date();
+                d.setDate(d.getDate() + offsetDays);
+                const y = d.getFullYear();
+                const m = String(d.getMonth() + 1).padStart(2, '0');
+                const day = String(d.getDate()).padStart(2, '0');
+                return `${y}-${m}-${day}`;
+            }
+
+            function parseISO(iso) {
+                const [y, m, d] = iso.split('-').map(Number);
+                return new Date(y, m - 1, d);
+            }
+
+            function daysBetween(startISO, endISO) {
+                const ms = parseISO(endISO) - parseISO(startISO);
+                return Math.round(ms / (1000 * 60 * 60 * 24));
+            }
+
+            function formatShortDate(iso) {
+                return parseISO(iso).toLocaleDateString(undefined, {
+                    month: 'short',
+                    day: 'numeric'
+                });
+            }
+
+            function escapeHTML(str) {
+                const div = document.createElement('div');
+                div.textContent = str;
+                return div.innerHTML;
+            }
+
+            function showFormMessage(text, isError = false) {
+                dom.formMessage.textContent = text;
+                dom.formMessage.className = `text-xs font-medium px-3 py-2 rounded-lg ${
+                    isError ? 'bg-rose-50 text-rose-700 border border-rose-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                }`;
+                dom.formMessage.classList.remove('hidden');
+                clearTimeout(showFormMessage._timer);
+                showFormMessage._timer = setTimeout(() => dom.formMessage.classList.add('hidden'), 3500);
+            }
+
+            function setInputValidity(inputEl, isValid) {
+                if (!inputEl) return;
+                if (isValid) {
+                    inputEl.classList.remove('border-rose-500', 'ring-2', 'ring-rose-200');
+                    inputEl.classList.add('border-slate-300');
+                } else {
+                    inputEl.classList.remove('border-slate-300');
+                    inputEl.classList.add('border-rose-500', 'ring-2', 'ring-rose-200');
+                }
+            }
+
+            function validateDailyHours() {
+                const raw = dom.dailyHours.value.trim();
+                const val = parseFloat(raw);
+
+                if (raw === '' || isNaN(val)) {
+                    setInputValidity(dom.dailyHours, false);
+                    dom.hoursError.textContent = 'Please enter your daily free study hours.';
+                    dom.hoursError.classList.remove('hidden');
+                    return null;
+                }
+
+                if (val < 0.5 || val > 16) {
+                    setInputValidity(dom.dailyHours, false);
+                    dom.hoursError.textContent = 'Daily study hours must be between 0.5 and 16 hours.';
+                    dom.hoursError.classList.remove('hidden');
+                    return null;
+                }
+
+                setInputValidity(dom.dailyHours, true);
+                dom.hoursError.classList.add('hidden');
+                return Math.round(val * 2) / 2;
+            }
+
+            function saveState() {
+                try {
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+                } catch (e) {
+                    // Ignore storage quota errors
+                }
+            }
+
+            /**
+             * Maps a subject name to a matching curated question pool
+             */
+            function getPoolForSubject(subjectName) {
+                const lower = subjectName.toLowerCase();
+                if (lower.includes('math') || lower.includes('calc') || lower.includes('algebra') || lower.includes('stat')) {
+                    return QUESTION_BANK.math;
+                }
+                if (lower.includes('comp') || lower.includes('cs') || lower.includes('program') || lower.includes('code') || lower.includes('algo') || lower.includes('data')) {
+                    return QUESTION_BANK.computer;
+                }
+                if (lower.includes('phys')) {
+                    return QUESTION_BANK.physics;
+                }
+                if (lower.includes('chem')) {
+                    return QUESTION_BANK.chemistry;
+                }
+                if (lower.includes('bio')) {
+                    return QUESTION_BANK.biology;
+                }
+                return null;
+            }
+
+            /**
+             * Builds a 5-question practice quiz tailored to the user's subjects & topics
+             */
+            function generateQuizQuestions() {
+                const targetSubjects = state.quiz.selectedSubjectId === 'all'
+                    ? state.subjects
+                    : state.subjects.filter(s => s.id === state.quiz.selectedSubjectId);
+
+                const candidateQuestions = [];
+
+                if (targetSubjects.length > 0) {
+                    targetSubjects.forEach(subj => {
+                        const pool = getPoolForSubject(subj.name);
+                        if (pool) {
+                            pool.forEach((q, idx) => {
+                                candidateQuestions.push({
+                                    id: `q-${subj.id}-${idx}`,
+                                    subjectName: subj.name,
+                                    colorIndex: subj.colorIndex,
+                                    topic: q.topic,
+                                    question: q.question,
+                                    options: [...q.options],
+                                    correctIndex: q.correctIndex,
+                                    explanation: q.explanation
+                                });
+                            });
+                        }
+
+                        // Also create topic-specific concept check questions for custom subjects/topics
+                        const topics = subj.topics.length > 0 ? subj.topics : DEFAULT_TOPICS.slice(0, 2);
+                        topics.forEach((topic, tIdx) => {
+                            if (!pool || tIdx === 0) {
+                                candidateQuestions.push({
+                                    id: `q-custom-${subj.id}-${tIdx}`,
+                                    subjectName: subj.name,
+                                    colorIndex: subj.colorIndex,
+                                    topic,
+                                    question: `When reviewing "${topic}" in ${subj.name}, which approach best verifies exam readiness?`,
+                                    options: [
+                                        'Solving timed practice problems without looking at notes',
+                                        'Skimming chapter headings once before sleeping',
+                                        'Highlighting every sentence in the textbook',
+                                        'Skipping worked examples to save time'
+                                    ],
+                                    correctIndex: 0,
+                                    explanation: `Testing yourself on "${topic}" under closed-book conditions reveals genuine understanding and highlights weak areas before exam day.`
+                                });
+                            }
+                        });
+                    });
+                }
+
+                // Always include general exam readiness questions as fallback or supplement
+                QUESTION_BANK.general.forEach((q, idx) => {
+                    candidateQuestions.push({
+                        id: `q-gen-${idx}`,
+                        subjectName: targetSubjects[0] ? targetSubjects[0].name : 'Study Skills',
+                        colorIndex: targetSubjects[0] ? targetSubjects[0].colorIndex : 0,
+                        topic: q.topic,
+                        question: q.question,
+                        options: [...q.options],
+                        correctIndex: q.correctIndex,
+                        explanation: q.explanation
+                    });
+                });
+
+                // Shuffle candidates and pick up to 5 distinct questions
+                const shuffled = candidateQuestions.sort(() => Math.random() - 0.5);
+                const selected = shuffled.slice(0, 5).map((item, idx) => ({
+                    ...item,
+                    id: `quiz-item-${idx}-${Date.now()}`
+                }));
+
+                state.quiz.questions = selected;
+                state.quiz.userAnswers = {};
+                state.quiz.submitted = false;
+                dom.quizWarning.classList.add('hidden');
+                saveState();
+                renderQuiz();
+            }
+
+            /**
+             * Loads saved state or initializes starter example
+             */
+            function initData() {
+                try {
+                    const saved = localStorage.getItem(STORAGE_KEY);
+                    if (saved) {
+                        const parsed = JSON.parse(saved);
+                        if (parsed && Array.isArray(parsed.subjects)) {
+                            state = {
+                                ...state,
+                                ...parsed,
+                                quiz: {
+                                    selectedSubjectId: 'all',
+                                    questions: [],
+                                    userAnswers: {},
+                                    submitted: false,
+                                    ...(parsed.quiz || {})
+                                }
+                            };
+                            if (!state.quiz.questions || state.quiz.questions.length === 0) {
+                                generateQuizQuestions();
+                            }
+                            return;
+                        }
+                    }
+                } catch (e) {
+                    // Fallback to starter example
+                }
+
+                state.dailyHours = 4;
+                state.subjects = [
+                    {
+                        id: 's-1',
+                        name: 'Mathematics',
+                        examDate: getLocalISO(4),
+                        colorIndex: 0,
+                        topics: ['Calculus Limits', 'Derivatives & Chain Rule', 'Integration Practice']
+                    },
+                    {
+                        id: 's-2',
+                        name: 'Computer Science',
+                        examDate: getLocalISO(6),
+                        colorIndex: 1,
+                        topics: ['Arrays & Linked Lists', 'Trees & Recursion', 'Sorting Algorithms']
+                    }
+                ];
+                buildStudyPlan();
+                generateQuizQuestions();
+            }
+
+            /**
+             * Generates the day-wise study plan from today until each subject's exam date
+             */
+            function buildStudyPlan() {
+                const todayISO = getLocalISO(0);
+                const validSubjects = state.subjects.filter(s => daysBetween(todayISO, s.examDate) >= 1);
+
+                if (validSubjects.length === 0) {
+                    state.plan = [];
+                    saveState();
+                    renderAll();
+                    return;
+                }
+
+                const completedSet = new Set(
+                    state.plan.filter(item => item.done).map(item => `${item.subjectId}|${item.topic}|${item.dateISO}`)
+                );
+
+                const maxDays = Math.max(...validSubjects.map(s => daysBetween(todayISO, s.examDate)));
+                const dailyHours = Math.max(0.5, Number(state.dailyHours) || 4);
+
+                const topicPointers = {};
+                validSubjects.forEach(s => { topicPointers[s.id] = 0; });
+
+                const newPlan = [];
+
+                for (let dayOffset = 0; dayOffset < maxDays; dayOffset++) {
+                    const currentISO = getLocalISO(dayOffset);
+                    const active = validSubjects.filter(s => daysBetween(currentISO, s.examDate) >= 1);
+                    if (active.length === 0) continue;
+
+                    const weights = active.map(s => {
+                        const daysLeft = Math.max(1, daysBetween(currentISO, s.examDate));
+                        return { subject: s, weight: 1 / Math.sqrt(daysLeft), daysLeft };
+                    });
+
+                    const totalWeight = weights.reduce((sum, w) => sum + w.weight, 0);
+                    let usedHours = 0;
+
+                    weights.sort((a, b) => a.daysLeft - b.daysLeft);
+
+                    weights.forEach((entry, index) => {
+                        let hrs = Math.max(0.5, Math.round(((entry.weight / totalWeight) * dailyHours) * 2) / 2);
+                        if (index === weights.length - 1 && weights.length > 1) {
+                            const remainder = Math.round((dailyHours - usedHours) * 2) / 2;
+                            if (remainder >= 0.5) hrs = remainder;
+                        }
+                        usedHours += hrs;
+
+                        const subj = entry.subject;
+                        const topics = subj.topics.length > 0 ? subj.topics : DEFAULT_TOPICS;
+                        const ptr = topicPointers[subj.id];
+                        const topicName = ptr < topics.length
+                            ? topics[ptr]
+                            : `Revision: ${topics[ptr % topics.length]}`;
+
+                        topicPointers[subj.id] += 1;
+
+                        const uniqueKey = `${subj.id}|${topicName}|${currentISO}`;
+                        newPlan.push({
+                            id: `item-${dayOffset}-${subj.id}`,
+                            dayNumber: dayOffset + 1,
+                            dateISO: currentISO,
+                            subjectId: subj.id,
+                            subjectName: subj.name,
+                            colorIndex: subj.colorIndex,
+                            topic: topicName,
+                            hours: hrs,
+                            done: completedSet.has(uniqueKey)
+                        });
+                    });
+                }
+
+                state.plan = newPlan;
+                saveState();
+                renderAll();
+            }
+
+            function toggleDone(id) {
+                const item = state.plan.find(p => p.id === id);
+                if (!item) return;
+                item.done = !item.done;
+                saveState();
+                renderTable();
+                renderChecklist();
+                renderOverviewKPIs();
+            }
+
+            function deleteSubject(id) {
+                state.subjects = state.subjects.filter(s => s.id !== id);
+                if (state.quiz.selectedSubjectId === id) {
+                    state.quiz.selectedSubjectId = 'all';
+                }
+                buildStudyPlan();
+                generateQuizQuestions();
+            }
+
+            function renderOverviewKPIs() {
+                const totalDays = new Set(state.plan.map(p => p.dateISO)).size;
+                const totalHours = Math.round(state.plan.reduce((sum, p) => sum + p.hours, 0) * 10) / 10;
+                const totalTasks = state.plan.length;
+                const doneTasks = state.plan.filter(p => p.done).length;
+                const pct = totalTasks > 0 ? Math.round((doneTasks / totalTasks) * 100) : 0;
+
+                if (dom.kpiDays) dom.kpiDays.textContent = `${totalDays} ${totalDays === 1 ? 'Day' : 'Days'}`;
+                if (dom.kpiHours) dom.kpiHours.textContent = `${totalHours} Hrs`;
+                if (dom.kpiProgress) dom.kpiProgress.textContent = `${pct}% (${doneTasks}/${totalTasks})`;
+                if (dom.dailyHoursBadge) dom.dailyHoursBadge.textContent = `${state.dailyHours} hrs/day`;
+
+                if (dom.kpiQuiz) {
+                    const questions = state.quiz.questions || [];
+                    if (state.quiz.submitted && questions.length > 0) {
+                        const correct = questions.reduce((acc, q) => acc + (state.quiz.userAnswers[q.id] === q.correctIndex ? 1 : 0), 0);
+                        const quizPct = Math.round((correct / questions.length) * 100);
+                        dom.kpiQuiz.textContent = `${correct}/${questions.length} (${quizPct}%)`;
+                    } else {
+                        dom.kpiQuiz.textContent = 'Ready';
+                    }
+                }
+            }
+
+            function renderSubjects() {
+                dom.subjectCount.textContent = state.subjects.length;
+
+                if (state.subjects.length === 0) {
+                    dom.subjectsList.innerHTML = `
+                        <p class="text-xs text-slate-400 text-center py-4 bg-slate-50/80 rounded-xl border border-dashed border-slate-200">
+                            No subjects added yet.
+                        </p>
+                    `;
+                    return;
+                }
+
+                const todayISO = getLocalISO(0);
+
+                dom.subjectsList.innerHTML = state.subjects.map(subj => {
+                    const badgeStyle = BADGE_COLORS[subj.colorIndex % BADGE_COLORS.length];
+                    const dotStyle = DOT_COLORS[subj.colorIndex % DOT_COLORS.length];
+                    const daysLeft = daysBetween(todayISO, subj.examDate);
+                    const urgencyStyle = daysLeft <= 3
+                        ? 'bg-rose-50 text-rose-700 border-rose-200'
+                        : daysLeft <= 7
+                            ? 'bg-amber-50 text-amber-700 border-amber-200'
+                            : 'bg-slate-100 text-slate-600 border-slate-200';
+
+                    return `
+                        <div class="group flex items-center justify-between gap-2 px-3 py-2.5 rounded-xl border border-slate-200/90 bg-slate-50/60 hover:bg-white hover:border-slate-300 transition">
+                            <div class="min-w-0">
+                                <div class="flex flex-wrap items-center gap-1.5">
+                                    <span class="inline-flex items-center gap-1.5 px-2 py-0.5 text-xs font-semibold rounded-md border ${badgeStyle}">
+                                        <span class="w-1.5 h-1.5 rounded-full ${dotStyle}"></span>
+                                        ${escapeHTML(subj.name)}
+                                    </span>
+                                    <span class="px-1.5 py-0.5 text-[10px] font-semibold rounded border ${urgencyStyle}">
+                                        ${daysLeft > 0 ? `${daysLeft}d left` : 'Today'}
+                                    </span>
+                                </div>
+                                <p class="text-[11px] text-slate-500 mt-1">
+                                    Exam: ${formatShortDate(subj.examDate)} • ${subj.topics.length || DEFAULT_TOPICS.length} topics
+                                </p>
+                            </div>
+                            <button type="button" data-delete-subj="${subj.id}" aria-label="Remove subject"
+                                class="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition cursor-pointer">
+                                ✕
+                            </button>
+                        </div>
+                    `;
+                }).join('');
+
+                dom.subjectsList.querySelectorAll('[data-delete-subj]').forEach(btn => {
+                    btn.addEventListener('click', () => deleteSubject(btn.getAttribute('data-delete-subj')));
+                });
+            }
+
+            function renderTable() {
+                const totalDays = new Set(state.plan.map(p => p.dateISO)).size;
+                const totalHours = state.plan.reduce((sum, p) => sum + p.hours, 0);
+                dom.planSummaryBadge.textContent = `${totalDays} ${totalDays === 1 ? 'day' : 'days'} • ${totalHours} hrs`;
+
+                if (state.plan.length === 0) {
+                    dom.planTableBody.innerHTML = '';
+                    dom.emptyTableState.classList.remove('hidden');
+                    return;
+                }
+
+                dom.emptyTableState.classList.add('hidden');
+                let prevDate = null;
+
+                dom.planTableBody.innerHTML = state.plan.map(item => {
+                    const isFirstOfDay = item.dateISO !== prevDate;
+                    prevDate = item.dateISO;
+                    const badgeStyle = BADGE_COLORS[item.colorIndex % BADGE_COLORS.length];
+                    const dotStyle = DOT_COLORS[item.colorIndex % DOT_COLORS.length];
+
+                    return `
+                        <tr class="${item.done ? 'bg-emerald-50/35' : 'hover:bg-slate-50/90'} ${isFirstOfDay && item.dayNumber > 1 ? 'border-t-2 border-slate-200/80' : ''} transition">
+                            <td class="py-3.5 pl-5 pr-3 whitespace-nowrap align-top">
+                                ${isFirstOfDay
+                                    ? `<div class="inline-flex items-center gap-1.5 font-bold text-slate-900 text-xs sm:text-sm">
+                                           <span class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>
+                                           Day ${item.dayNumber}
+                                       </div>
+                                       <div class="text-xs text-slate-500 pl-3">${formatShortDate(item.dateISO)}</div>`
+                                    : `<span class="text-xs text-slate-400 pl-3">↳ Day ${item.dayNumber}</span>`
+                                }
+                            </td>
+                            <td class="px-3 py-3.5 align-top">
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 text-xs font-semibold rounded-md border ${badgeStyle}">
+                                    <span class="w-1.5 h-1.5 rounded-full ${dotStyle}"></span>
+                                    ${escapeHTML(item.subjectName)}
+                                </span>
+                            </td>
+                            <td class="px-3 py-3.5 align-top text-xs sm:text-sm font-medium ${item.done ? 'line-through text-slate-400' : 'text-slate-800'}">
+                                ${escapeHTML(item.topic)}
+                            </td>
+                            <td class="px-3 py-3.5 whitespace-nowrap align-top">
+                                <span class="inline-block px-2 py-0.5 text-xs font-semibold rounded-md bg-slate-100 text-slate-700">
+                                    ${item.hours} hrs
+                                </span>
+                            </td>
+                            <td class="py-3.5 pl-3 pr-5 text-right whitespace-nowrap align-top">
+                                <input type="checkbox" data-check-id="${item.id}" ${item.done ? 'checked' : ''}
+                                    aria-label="Mark ${escapeHTML(item.topic)} done"
+                                    class="w-4 h-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer">
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+
+                dom.planTableBody.querySelectorAll('[data-check-id]').forEach(cb => {
+                    cb.addEventListener('change', () => toggleDone(cb.getAttribute('data-check-id')));
+                });
+            }
+
+            function renderChecklist() {
+                const total = state.plan.length;
+                const done = state.plan.filter(p => p.done).length;
+                const pending = total - done;
+                const percent = total > 0 ? Math.round((done / total) * 100) : 0;
+
+                const totalHours = Math.round(state.plan.reduce((sum, p) => sum + p.hours, 0) * 10) / 10;
+                const doneHours = Math.round(state.plan.filter(p => p.done).reduce((sum, p) => sum + p.hours, 0) * 10) / 10;
+
+                dom.hoursProgressText.textContent = `${doneHours} / ${totalHours} hrs`;
+                dom.progressText.textContent = `${done} / ${total} completed (${percent}%)`;
+                dom.progressBar.style.width = `${percent}%`;
+
+                if (dom.countAll) dom.countAll.textContent = `(${total})`;
+                if (dom.countPending) dom.countPending.textContent = `(${pending})`;
+                if (dom.countDone) dom.countDone.textContent = `(${done})`;
+
+                if (total > 0 && done === total) {
+                    dom.completionBanner.classList.remove('hidden');
+                } else {
+                    dom.completionBanner.classList.add('hidden');
+                }
+
+                if (total === 0) {
+                    dom.toggleAllDoneBtn.disabled = true;
+                    dom.toggleAllDoneBtn.classList.add('opacity-50', 'pointer-events-none');
+                    dom.toggleAllDoneBtn.textContent = 'Mark All Done';
+                } else {
+                    dom.toggleAllDoneBtn.disabled = false;
+                    dom.toggleAllDoneBtn.classList.remove('opacity-50', 'pointer-events-none');
+                    dom.toggleAllDoneBtn.textContent = done === total ? 'Uncheck All' : 'Mark All Done';
+                }
+
+                const currentFilter = state.checklistFilter || 'all';
+                dom.checklistFilters.querySelectorAll('[data-filter]').forEach(btn => {
+                    const isActive = btn.getAttribute('data-filter') === currentFilter;
+                    btn.className = isActive
+                        ? 'px-3 py-1.5 rounded-lg bg-white text-slate-900 shadow-xs transition cursor-pointer'
+                        : 'px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition cursor-pointer';
+                });
+
+                if (total === 0) {
+                    dom.checklistContainer.innerHTML = `
+                        <p class="col-span-full text-xs text-slate-400 text-center py-5 bg-slate-50/80 rounded-xl border border-dashed border-slate-200">
+                            Your topic checklist will appear once a study plan is generated.
+                        </p>
+                    `;
+                    return;
+                }
+
+                const filteredItems = state.plan.filter(item => {
+                    if (currentFilter === 'pending') return !item.done;
+                    if (currentFilter === 'done') return item.done;
+                    return true;
+                });
+
+                if (filteredItems.length === 0) {
+                    const emptyMsg = currentFilter === 'pending'
+                        ? 'No remaining topics — every task is completed!'
+                        : 'No completed topics yet. Check off a task to track progress.';
+                    dom.checklistContainer.innerHTML = `
+                        <p class="col-span-full text-xs text-slate-500 text-center py-5 bg-slate-50/80 rounded-xl border border-dashed border-slate-200">
+                            ${emptyMsg}
+                        </p>
+                    `;
+                    return;
+                }
+
+                dom.checklistContainer.innerHTML = filteredItems.map(item => {
+                    const badgeStyle = BADGE_COLORS[item.colorIndex % BADGE_COLORS.length];
+                    const dotStyle = DOT_COLORS[item.colorIndex % DOT_COLORS.length];
+                    return `
+                        <label class="flex items-start gap-3 p-3.5 rounded-xl border ${item.done ? 'bg-emerald-50/35 border-emerald-200/70' : 'bg-white border-slate-200/90 hover:border-indigo-300 hover:shadow-2xs'} cursor-pointer transition select-none">
+                            <input type="checkbox" data-list-check="${item.id}" ${item.done ? 'checked' : ''}
+                                class="mt-0.5 w-4 h-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer shrink-0">
+                            <div class="min-w-0 flex-1">
+                                <p class="text-xs sm:text-sm font-semibold ${item.done ? 'line-through text-slate-400' : 'text-slate-800'}">
+                                    ${escapeHTML(item.topic)}
+                                </p>
+                                <div class="flex flex-wrap items-center gap-2 mt-1.5">
+                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-semibold rounded border ${badgeStyle}">
+                                        <span class="w-1.5 h-1.5 rounded-full ${dotStyle}"></span>
+                                        ${escapeHTML(item.subjectName)}
+                                    </span>
+                                    <span class="text-[11px] font-medium text-slate-400">Day ${item.dayNumber} • ${item.hours} hrs</span>
+                                </div>
+                            </div>
+                        </label>
+                    `;
+                }).join('');
+
+                dom.checklistContainer.querySelectorAll('[data-list-check]').forEach(cb => {
+                    cb.addEventListener('change', () => toggleDone(cb.getAttribute('data-list-check')));
+                });
+            }
+
+            /**
+             * Renders the Quick Practice Quiz section, answer states, and score banner
+             */
+            function renderQuiz() {
+                // Populate Subject Filter Dropdown
+                const currentSelection = state.quiz.selectedSubjectId;
+                const optionsHTML = [
+                    `<option value="all">All Subjects</option>`,
+                    ...state.subjects.map(s => `<option value="${s.id}">${escapeHTML(s.name)}</option>`)
+                ].join('');
+                dom.quizSubjectSelect.innerHTML = optionsHTML;
+                dom.quizSubjectSelect.value = state.subjects.some(s => s.id === currentSelection) ? currentSelection : 'all';
+
+                const questions = state.quiz.questions || [];
+                const userAnswers = state.quiz.userAnswers || {};
+                const submitted = Boolean(state.quiz.submitted);
+                const totalQ = questions.length;
+                const answeredCount = questions.filter(q => typeof userAnswers[q.id] === 'number').length;
+
+                dom.quizAnsweredCount.textContent = `${answeredCount} of ${totalQ} answered`;
+
+                // Update Score Banner
+                if (submitted && totalQ > 0) {
+                    const correctCount = questions.reduce((acc, q) => acc + (userAnswers[q.id] === q.correctIndex ? 1 : 0), 0);
+                    const pct = Math.round((correctCount / totalQ) * 100);
+
+                    let bannerStyle = 'bg-emerald-50 border-emerald-200';
+                    let circleStyle = 'bg-emerald-600 text-white';
+                    let badgeStyle = 'bg-emerald-100 text-emerald-800';
+                    let badgeLabel = 'Exam Ready!';
+
+                    if (pct < 50) {
+                        bannerStyle = 'bg-rose-50 border-rose-200';
+                        circleStyle = 'bg-rose-600 text-white';
+                        badgeStyle = 'bg-rose-100 text-rose-800';
+                        badgeLabel = 'Needs Review';
+                    } else if (pct < 80) {
+                        bannerStyle = 'bg-amber-50 border-amber-200';
+                        circleStyle = 'bg-amber-500 text-white';
+                        badgeStyle = 'bg-amber-100 text-amber-800';
+                        badgeLabel = 'Good Progress';
+                    }
+
+                    dom.quizScoreBanner.className = `mb-5 p-4 rounded-2xl border flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${bannerStyle}`;
+                    dom.quizScoreCircle.className = `w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-base shrink-0 ${circleStyle}`;
+                    dom.quizScoreCircle.textContent = `${correctCount}/${totalQ}`;
+                    dom.quizScoreTitle.textContent = `Your Score: ${pct}% (${correctCount} out of ${totalQ} correct)`;
+                    dom.quizScoreBadge.className = `px-2.5 py-0.5 text-[11px] font-semibold rounded-full ${badgeStyle}`;
+                    dom.quizScoreBadge.textContent = badgeLabel;
+                    dom.quizScoreBanner.classList.remove('hidden');
+
+                    dom.checkAnswersBtn.textContent = 'Answers Checked';
+                    dom.checkAnswersBtn.disabled = true;
+                    dom.checkAnswersBtn.classList.add('opacity-50', 'pointer-events-none');
+                } else {
+                    dom.quizScoreBanner.classList.add('hidden');
+                    dom.checkAnswersBtn.textContent = 'Check Answers & Score';
+                    dom.checkAnswersBtn.disabled = totalQ === 0;
+                    dom.checkAnswersBtn.classList.toggle('opacity-50', totalQ === 0);
+                    dom.checkAnswersBtn.classList.toggle('pointer-events-none', totalQ === 0);
+                }
+
+                if (totalQ === 0) {
+                    dom.quizQuestionsContainer.innerHTML = `
+                        <p class="text-xs text-slate-400 text-center py-6 bg-slate-50 rounded-xl border border-dashed border-slate-200">
+                            Click "New Quiz" to generate practice questions.
+                        </p>
+                    `;
+                    return;
+                }
+
+                const OPTION_LETTERS = ['A', 'B', 'C', 'D'];
+
+                dom.quizQuestionsContainer.innerHTML = questions.map((q, qIndex) => {
+                    const selectedIdx = userAnswers[q.id];
+                    const badgeStyle = BADGE_COLORS[q.colorIndex % BADGE_COLORS.length];
+
+                    const optionsMarkup = q.options.map((optText, optIdx) => {
+                        const isSelected = selectedIdx === optIdx;
+                        const isCorrect = q.correctIndex === optIdx;
+
+                        let cardClass = 'border-slate-200 bg-white hover:border-indigo-300 text-slate-800';
+                        let letterClass = 'bg-slate-100 text-slate-600';
+                        let statusTag = '';
+
+                        if (!submitted) {
+                            if (isSelected) {
+                                cardClass = 'border-indigo-600 bg-indigo-50/70 text-indigo-950 ring-1 ring-indigo-600';
+                                letterClass = 'bg-indigo-600 text-white';
+                            }
+                        } else {
+                            if (isCorrect) {
+                                cardClass = 'border-emerald-500 bg-emerald-50/80 text-emerald-950 ring-1 ring-emerald-500';
+                                letterClass = 'bg-emerald-600 text-white';
+                                statusTag = `<span class="text-[11px] font-semibold text-emerald-700 ml-auto shrink-0">✓ Correct</span>`;
+                            } else if (isSelected && !isCorrect) {
+                                cardClass = 'border-rose-500 bg-rose-50/80 text-rose-950 ring-1 ring-rose-500';
+                                letterClass = 'bg-rose-600 text-white';
+                                statusTag = `<span class="text-[11px] font-semibold text-rose-700 ml-auto shrink-0">✕ Your Answer</span>`;
+                            } else {
+                                cardClass = 'border-slate-200 bg-slate-50/60 text-slate-500 opacity-80';
+                            }
+                        }
+
+                        return `
+                            <button type="button" data-quiz-q="${q.id}" data-quiz-opt="${optIdx}" ${submitted ? 'disabled' : ''}
+                                class="w-full text-left flex items-center gap-3 p-3 rounded-xl border text-xs sm:text-sm transition ${submitted ? 'cursor-default' : 'cursor-pointer'} ${cardClass}">
+                                <span class="w-6 h-6 rounded-lg flex items-center justify-center text-xs font-bold shrink-0 ${letterClass}">
+                                    ${OPTION_LETTERS[optIdx]}
+                                </span>
+                                <span class="flex-1">${escapeHTML(optText)}</span>
+                                ${statusTag}
+                            </button>
+                        `;
+                    }).join('');
+
+                    const explanationMarkup = submitted
+                        ? `<div class="mt-3 px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-700">
+                               <span class="font-semibold text-slate-900">Explanation:</span> ${escapeHTML(q.explanation)}
+                           </div>`
+                        : '';
+
+                    return `
+                        <div class="p-4 rounded-2xl border border-slate-200 bg-white space-y-3">
+                            <div class="flex flex-wrap items-center justify-between gap-2">
+                                <span class="text-xs font-bold text-slate-400">Question ${qIndex + 1} of ${totalQ}</span>
+                                <div class="flex items-center gap-1.5">
+                                    <span class="px-2 py-0.5 text-[11px] font-semibold rounded-md border ${badgeStyle}">
+                                        ${escapeHTML(q.subjectName)}
+                                    </span>
+                                    <span class="text-[11px] text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md">
+                                        ${escapeHTML(q.topic)}
+                                    </span>
+                                </div>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-900 leading-snug">
+                                ${escapeHTML(q.question)}
+                            </p>
+                            <div class="grid grid-cols-1 gap-2 pt-0.5">
+                                ${optionsMarkup}
+                            </div>
+                            ${explanationMarkup}
+                        </div>
+                    `;
+                }).join('');
+
+                // Bind option click events when quiz is active
+                if (!submitted) {
+                    dom.quizQuestionsContainer.querySelectorAll('[data-quiz-q]').forEach(btn => {
+                        btn.addEventListener('click', () => {
+                            const qId = btn.getAttribute('data-quiz-q');
+                            const optIdx = Number(btn.getAttribute('data-quiz-opt'));
+                            state.quiz.userAnswers[qId] = optIdx;
+                            dom.quizWarning.classList.add('hidden');
+                            saveState();
+                            renderQuiz();
+                        });
+                    });
+                }
+                renderOverviewKPIs();
+            }
+
+            function renderAll() {
+                dom.dailyHours.value = state.dailyHours;
+                renderSubjects();
+                renderTable();
+                renderChecklist();
+                renderQuiz();
+                renderOverviewKPIs();
+            }
+
+            function bindEvents() {
+                dom.dailyHours.addEventListener('input', () => {
+                    const validHours = validateDailyHours();
+                    if (validHours !== null) {
+                        state.dailyHours = validHours;
+                        buildStudyPlan();
+                    }
+                });
+
+                dom.subjectName.addEventListener('input', () => setInputValidity(dom.subjectName, true));
+                dom.examDate.addEventListener('change', () => setInputValidity(dom.examDate, true));
+
+                dom.subjectForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    setInputValidity(dom.subjectName, true);
+                    setInputValidity(dom.examDate, true);
+
+                    const validHours = validateDailyHours();
+                    if (validHours === null) {
+                        dom.dailyHours.focus();
+                        return;
+                    }
+                    state.dailyHours = validHours;
+
+                    const name = dom.subjectName.value.trim();
+                    const examDate = dom.examDate.value;
+                    const rawTopics = dom.subjectTopics.value.trim();
+
+                    if (name.length < 2) {
+                        setInputValidity(dom.subjectName, false);
+                        dom.subjectName.focus();
+                        showFormMessage('Please enter a subject name (at least 2 characters).', true);
+                        return;
+                    }
+
+                    const isDuplicate = state.subjects.some(
+                        s => s.name.toLowerCase() === name.toLowerCase()
+                    );
+                    if (isDuplicate) {
+                        setInputValidity(dom.subjectName, false);
+                        dom.subjectName.focus();
+                        showFormMessage(`"${name}" is already in your subject list.`, true);
+                        return;
+                    }
+
+                    if (!examDate) {
+                        setInputValidity(dom.examDate, false);
+                        dom.examDate.focus();
+                        showFormMessage('Please select an exam date.', true);
+                        return;
+                    }
+
+                    if (daysBetween(getLocalISO(0), examDate) < 1) {
+                        setInputValidity(dom.examDate, false);
+                        dom.examDate.focus();
+                        showFormMessage('Exam date must be tomorrow or later.', true);
+                        return;
+                    }
+
+                    const topics = rawTopics
+                        ? Array.from(new Set(rawTopics.split(',').map(t => t.trim()).filter(Boolean)))
+                        : [];
+
+                    state.subjects.push({
+                        id: `s-${Date.now()}`,
+                        name,
+                        examDate,
+                        colorIndex: state.subjects.length,
+                        topics
+                    });
+
+                    dom.subjectName.value = '';
+                    dom.subjectTopics.value = '';
+                    buildStudyPlan();
+                    generateQuizQuestions();
+                    showFormMessage(`Added "${name}" to your study plan.`);
+                });
+
+                dom.generateBtn.addEventListener('click', () => {
+                    const validHours = validateDailyHours();
+                    if (validHours === null) {
+                        dom.dailyHours.focus();
+                        return;
+                    }
+                    if (state.subjects.length === 0) {
+                        setInputValidity(dom.subjectName, false);
+                        dom.subjectName.focus();
+                        showFormMessage('Add at least one subject before generating a plan.', true);
+                        return;
+                    }
+                    state.dailyHours = validHours;
+                    buildStudyPlan();
+                    showFormMessage('Study plan generated!');
+                });
+
+                dom.checklistFilters.querySelectorAll('[data-filter]').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        state.checklistFilter = btn.getAttribute('data-filter');
+                        saveState();
+                        renderChecklist();
+                    });
+                });
+
+                dom.toggleAllDoneBtn.addEventListener('click', () => {
+                    if (state.plan.length === 0) return;
+                    const allDone = state.plan.every(p => p.done);
+                    state.plan.forEach(p => { p.done = !allDone; });
+                    saveState();
+                    renderTable();
+                    renderChecklist();
+                });
+
+                // Quiz Subject Filter Change
+                dom.quizSubjectSelect.addEventListener('change', () => {
+                    state.quiz.selectedSubjectId = dom.quizSubjectSelect.value;
+                    generateQuizQuestions();
+                });
+
+                // Generate New Quiz Button
+                dom.newQuizBtn.addEventListener('click', () => {
+                    generateQuizQuestions();
+                });
+
+                // Check Answers & Score Button
+                dom.checkAnswersBtn.addEventListener('click', () => {
+                    const questions = state.quiz.questions;
+                    if (questions.length === 0) return;
+
+                    const unansweredCount = questions.filter(q => typeof state.quiz.userAnswers[q.id] !== 'number').length;
+                    if (unansweredCount > 0) {
+                        dom.quizWarning.textContent = `Please answer all questions before checking your score (${unansweredCount} remaining).`;
+                        dom.quizWarning.classList.remove('hidden');
+                        return;
+                    }
+
+                    dom.quizWarning.classList.add('hidden');
+                    state.quiz.submitted = true;
+                    saveState();
+                    renderQuiz();
+                    dom.quizScoreBanner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                });
+
+                // Retry Same Quiz Button
+                dom.retryQuizBtn.addEventListener('click', () => {
+                    state.quiz.userAnswers = {};
+                    state.quiz.submitted = false;
+                    dom.quizWarning.classList.add('hidden');
+                    saveState();
+                    renderQuiz();
+                });
+
+                // Reset App State
+                dom.resetBtn.addEventListener('click', () => {
+                    state.dailyHours = 4;
+                    state.subjects = [];
+                    state.plan = [];
+                    state.checklistFilter = 'all';
+                    state.quiz.selectedSubjectId = 'all';
+                    setInputValidity(dom.dailyHours, true);
+                    setInputValidity(dom.subjectName, true);
+                    setInputValidity(dom.examDate, true);
+                    dom.hoursError.classList.add('hidden');
+                    dom.formMessage.classList.add('hidden');
+                    generateQuizQuestions();
+                    saveState();
+                    renderAll();
+                });
+            }
+
+            document.addEventListener('DOMContentLoaded', () => {
+                dom.examDate.min = getLocalISO(1);
+                dom.examDate.value = getLocalISO(5);
+                initData();
+                bindEvents();
+                renderAll();
+            });
+        })();
+    </script>
+</body>
+</html>
